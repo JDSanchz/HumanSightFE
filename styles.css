@@ -72,6 +72,23 @@ h1 {
   color: #d9d9d9;
 }
 
+.status.health {
+  font-size: 0.9rem;
+  color: #a8a8a8;
+}
+
+.status.health[data-state="ok"] {
+  color: #7dffb0;
+}
+
+.status.health[data-state="pending"] {
+  color: #ffd479;
+}
+
+.status.health[data-state="error"] {
+  color: #ff8a8a;
+}
+
 .controls {
   display: grid;
   gap: 12px;

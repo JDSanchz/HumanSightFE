@@ -5,6 +5,7 @@ import JSZip from "jszip";
 const input = document.getElementById("file-input");
 const preview = document.getElementById("preview");
 const status = document.getElementById("status");
+const health = document.getElementById("health");
 const results = document.getElementById("results");
 const downloadPeopleButton = document.getElementById("download-people");
 const peopleRange = document.getElementById("people-range");
@@ -46,6 +47,52 @@ const renderResultsMessage = (message) => {
   );
 };
 
+const updateHealth = (message, state) => {
+  if (!health) {
+    return;
+  }
+  health.textContent = message;
+  if (state) {
+    health.dataset.state = state;
+  } else {
+    delete health.dataset.state;
+  }
+};
+
+const pingHealth = async () => {
+  if (!health) {
+    return;
+  }
+  updateHealth("API: checking...", "pending");
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+  try {
+    const response = await fetch(`${API_URL}/health`, {
+      method: "GET",
+      signal: controller.signal,
+    });
+    const bodyText = await response.text();
+    if (!response.ok) {
+      throw new Error(bodyText || `HTTP ${response.status}`);
+    }
+    let healthMessage = "API: ok";
+    try {
+      const data = JSON.parse(bodyText);
+      if (data?.status) {
+        healthMessage = `API: ${data.status}`;
+      }
+    } catch {
+      // Non-JSON response; default to ok.
+    }
+    updateHealth(healthMessage, "ok");
+  } catch (error) {
+    updateHealth("API: unavailable", "error");
+  } finally {
+    clearTimeout(timeoutId);
+  }
+};
+
 const setDownloadState = (enabled) => {
   downloadPeopleButton.disabled = !enabled;
 };
@@ -55,6 +102,7 @@ const updateThresholdLabels = () => {
 };
 
 updateThresholdLabels();
+pingHealth();
 
 const renderScores = (scores) =>
   scores
