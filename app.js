@@ -178,9 +178,56 @@ const renderPreviewGrid = (items) => {
   );
 };
 
+const resizeImageForUpload = async (file, scale = 0.5) => {
+  if (!file.type.startsWith("image/")) {
+    return file;
+  }
+
+  let bitmap;
+  try {
+    bitmap = await createImageBitmap(file);
+  } catch {
+    bitmap = null;
+  }
+
+  if (!bitmap) {
+    return file;
+  }
+
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+  const context = canvas.getContext("2d");
+
+  if (!context) {
+    bitmap.close();
+    return file;
+  }
+
+  context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close();
+
+  const targetType =
+    file.type === "image/jpeg" || file.type === "image/webp"
+      ? file.type
+      : "image/jpeg";
+  const quality = targetType === "image/jpeg" ? 0.9 : 0.92;
+
+  const blob = await new Promise((resolve) => {
+    canvas.toBlob(
+      (result) => resolve(result || file),
+      targetType,
+      quality,
+    );
+  });
+
+  return new File([blob], file.name, { type: blob.type || file.type });
+};
+
 const analyzeImage = async (file) => {
   const formData = new FormData();
-  formData.append("file", file);
+  const resizedFile = await resizeImageForUpload(file);
+  formData.append("file", resizedFile);
 
   const response = await fetch(`${API_URL}/analyze`, {
     method: "POST",
