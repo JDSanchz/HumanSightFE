@@ -344,27 +344,29 @@ input.addEventListener("change", (event) => {
     );
   };
 
-  items.forEach((item, index) => {
-    item.status = "loading";
-    renderPreviewGrid(items);
+  const processQueue = async () => {
+    for (const item of items) {
+      item.status = "loading";
+      renderPreviewGrid(items);
 
-    analyzeImage(item.file)
-      .then((data) => {
+      try {
+        const data = await analyzeImage(item.file);
         if (data?.scores?.length) {
           item.scores = data.scores;
         }
         item.status = "done";
-      })
-      .catch((error) => {
+      } catch (error) {
         item.error = error.message || "Unable to analyze image.";
         item.status = "done";
-      })
-      .finally(() => {
+      } finally {
         completed += 1;
         completedItems = items.filter((entry) => entry.status === "done");
         setDownloadState(completedItems.length > 0);
         renderPreviewGrid(items);
         updateSummary();
-      });
-  });
+      }
+    }
+  };
+
+  void processQueue();
 });
