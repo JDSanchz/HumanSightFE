@@ -12,13 +12,18 @@ const peopleRange = document.getElementById("people-range");
 const peopleValue = document.getElementById("people-value");
 const appDescription = document.getElementById("app-description");
 const dismissDescription = document.getElementById("dismiss-description");
+const limitHint = document.getElementById("limit-hint");
+const devFlag = document.getElementById("dev-flag");
 
 const previewRoot = createRoot(preview);
 const resultsRoot = createRoot(results);
 let activeItems = [];
 let completedItems = [];
-const MAX_FILES = 5;
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const rawLimit = import.meta.env.VITE_LIMIT ?? import.meta.env.LIMIT;
+const parsedLimit = Number.parseInt(rawLimit, 10);
+const MAX_FILES =
+  Number.isFinite(parsedLimit) && parsedLimit > 0 ? parsedLimit : 5;
 const PEOPLE_LABEL = "people";
 
 const renderMessage = (message) => {
@@ -105,6 +110,14 @@ const updateThresholdLabels = () => {
 
 updateThresholdLabels();
 pingHealth();
+
+if (limitHint) {
+  limitHint.textContent = `Choose up to ${MAX_FILES} images to preview and analyze.`;
+}
+
+if (devFlag) {
+  devFlag.hidden = !Number.isFinite(parsedLimit) || parsedLimit <= 0;
+}
 
 if (dismissDescription && appDescription) {
   dismissDescription.addEventListener("click", () => {
