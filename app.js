@@ -144,6 +144,14 @@ const renderScores = (scores) =>
 
 const renderPreviewGrid = (items) => {
   const cards = items.map((item) => {
+    const previewMedia = item.url
+      ? React.createElement("img", { src: item.url, alt: item.name })
+      : React.createElement(
+          "div",
+          { className: "preview-skeleton" },
+          "Preparing preview...",
+        );
+
     const scoreList =
       item.scores?.length > 0
         ? React.createElement(
@@ -170,7 +178,7 @@ const renderPreviewGrid = (items) => {
     return React.createElement(
       "article",
       { className: "preview-card", key: item.id },
-      React.createElement("img", { src: item.url, alt: item.name }),
+      previewMedia,
       React.createElement(
         "div",
         { className: "preview-meta" },
@@ -266,10 +274,10 @@ const resizeImageForUpload = async (file, scale = 0.5, maxBytes = 200 * 1024) =>
   return new File([blob], file.name, { type: blob.type || file.type });
 };
 
-const analyzeImage = async (file) => {
+const analyzeImage = async (file, resizedFile = null) => {
   const formData = new FormData();
-  const resizedFile = await resizeImageForUpload(file);
-  formData.append("file", resizedFile);
+  const uploadFile = resizedFile || (await resizeImageForUpload(file));
+  formData.append("file", uploadFile);
 
   const response = await fetch(`${API_URL}/analyze`, {
     method: "POST",
@@ -359,8 +367,9 @@ input.addEventListener("change", (event) => {
   const items = limitedFiles.map((file, index) => ({
     id: `${file.name}-${index}-${file.lastModified}`,
     file,
+    resizedFile: null,
     name: file.name,
-    url: URL.createObjectURL(file),
+    url: "",
     status: "queued",
     scores: [],
     error: "",
@@ -375,7 +384,7 @@ input.addEventListener("change", (event) => {
   status.textContent = truncated
     ? `Selected ${limitedFiles.length} images (showing first ${MAX_FILES}).`
     : `Selected ${limitedFiles.length} image(s).`;
-  renderResultsMessage("Analyzing images...");
+  renderResultsMessage("Preparing previews...");
 
   let completed = 0;
   const updateSummary = () => {
@@ -386,13 +395,30 @@ input.addEventListener("change", (event) => {
     );
   };
 
+  const preparePreviews = async () => {
+    for (const item of items) {
+      try {
+        const resizedFile = await resizeImageForUpload(item.file);
+        item.resizedFile = resizedFile;
+        if (item.url) {
+          URL.revokeObjectURL(item.url);
+        }
+        item.url = URL.createObjectURL(resizedFile);
+      } catch {
+        item.url = URL.createObjectURL(item.file);
+      } finally {
+        renderPreviewGrid(items);
+      }
+    }
+  };
+
   const processQueue = async () => {
     for (const item of items) {
       item.status = "loading";
       renderPreviewGrid(items);
 
       try {
-        const data = await analyzeImage(item.file);
+        const data = await analyzeImage(item.file, item.resizedFile);
         if (data?.scores?.length) {
           item.scores = data.scores;
         }
@@ -410,5 +436,11 @@ input.addEventListener("change", (event) => {
     }
   };
 
-  void processQueue();
+  const handleSelection = async () => {
+    await preparePreviews();
+    renderResultsMessage("Analyzing images...");
+    await processQueue();
+  };
+
+  void handleSelection();
 });
