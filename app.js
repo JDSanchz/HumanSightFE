@@ -17,7 +17,7 @@ const previewRoot = createRoot(preview);
 const resultsRoot = createRoot(results);
 let activeItems = [];
 let completedItems = [];
-const MAX_FILES = 25;
+const MAX_FILES = 5;
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const PEOPLE_LABEL = "people";
 
