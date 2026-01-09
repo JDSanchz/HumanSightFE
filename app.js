@@ -10,6 +10,8 @@ const results = document.getElementById("results");
 const downloadPeopleButton = document.getElementById("download-people");
 const peopleRange = document.getElementById("people-range");
 const peopleValue = document.getElementById("people-value");
+const appDescription = document.getElementById("app-description");
+const dismissDescription = document.getElementById("dismiss-description");
 
 const previewRoot = createRoot(preview);
 const resultsRoot = createRoot(results);
@@ -103,6 +105,12 @@ const updateThresholdLabels = () => {
 
 updateThresholdLabels();
 pingHealth();
+
+if (dismissDescription && appDescription) {
+  dismissDescription.addEventListener("click", () => {
+    appDescription.remove();
+  });
+}
 
 const renderScores = (scores) =>
   scores

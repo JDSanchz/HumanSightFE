@@ -45,6 +45,47 @@ h1 {
   color: #b0b0b0;
 }
 
+.notice {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #171717;
+  border: 1px solid #262626;
+  display: grid;
+  gap: 10px;
+  position: relative;
+}
+
+.notice p {
+  margin: 0;
+  color: #d9d9d9;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.notice-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: 1px solid #3b3b3b;
+  border-radius: 999px;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  color: #f5f5f5;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.notice-close:hover {
+  border-color: #5e2bff;
+  transform: translateY(-1px);
+}
+
 .upload-area {
   border: 2px dashed #2a2a2a;
   border-radius: 14px;
