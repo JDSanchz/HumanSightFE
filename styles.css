@@ -1,0 +1,93 @@
+:root {
+  color-scheme: light;
+  font-family: "Space Grotesk", "Trebuchet MS", sans-serif;
+  background: radial-gradient(circle at top, #f8f1d9 0%, #f4f7ff 45%, #f2efe9 100%);
+  color: #1f1f1f;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: transparent;
+}
+
+.page {
+  width: min(640px, 92vw);
+  padding: 32px 18px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 20px 50px rgba(40, 40, 60, 0.12);
+  display: grid;
+  gap: 18px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.hint {
+  margin: 0;
+  color: #5c5c5c;
+}
+
+.upload-area {
+  border: 2px dashed #c9c5c1;
+  border-radius: 14px;
+  padding: 24px;
+  display: grid;
+  place-items: center;
+  background: #faf8f2;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.upload-area:hover {
+  border-color: #2f2f2f;
+  transform: translateY(-1px);
+}
+
+.upload-area input {
+  display: none;
+}
+
+.status {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #3b3b3b;
+}
+
+.preview {
+  min-height: 240px;
+  border-radius: 16px;
+  background: #f6f4f1;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.preview .placeholder {
+  color: #7b7b7b;
+  font-size: 0.95rem;
+}

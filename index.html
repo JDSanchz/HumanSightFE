@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Upload Preview</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="card">
+        <h1>Image Preview</h1>
+        <p class="hint">Choose an image file to see it below.</p>
+        <label class="upload-area" for="file-input">
+          <span>Click to upload</span>
+          <input id="file-input" type="file" accept="image/*" />
+        </label>
+        <p id="status" class="status" role="status">No image selected.</p>
+        <div id="preview" class="preview"></div>
+      </section>
+    </main>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
