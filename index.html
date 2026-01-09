@@ -10,13 +10,25 @@
     <main class="page">
       <section class="card">
         <h1>Image Preview</h1>
-        <p class="hint">Choose an image file to see it below.</p>
+        <p class="hint">Choose up to 25 images to preview and analyze.</p>
         <label class="upload-area" for="file-input">
           <span>Click to upload</span>
-          <input id="file-input" type="file" accept="image/*" />
+          <input id="file-input" type="file" accept="image/*" multiple />
         </label>
+        <div class="controls">
+          <label class="control">
+            <span>People threshold: <strong id="people-value">50%</strong></span>
+            <input id="people-range" type="range" min="0" max="100" step="1" value="50" />
+          </label>
+        </div>
         <p id="status" class="status" role="status">No image selected.</p>
+        <div class="actions">
+          <button id="download-people" type="button" disabled>
+            Download ZIP (people threshold)
+          </button>
+        </div>
         <div id="preview" class="preview"></div>
+        <div id="results" class="results"></div>
       </section>
     </main>
     <script type="module" src="app.js"></script>
