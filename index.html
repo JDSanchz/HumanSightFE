@@ -26,16 +26,17 @@
         <div class="controls">
           <label class="control">
             <span>
-              People threshold: <strong id="people-value">87%</strong>
+              People threshold: <strong id="people-value">--%</strong>
               <span
+                id="people-recommendation"
                 class="info-icon"
                 role="img"
-                aria-label="Recommended: 87% based on model performance."
-                data-tooltip="Recommended: 87% based on model performance."
+                aria-label="Recommended: --% based on model performance."
+                data-tooltip="Recommended: --% based on model performance."
                 >i</span
               >
             </span>
-            <input id="people-range" type="range" min="0" max="100" step="1" value="87" />
+            <input id="people-range" type="range" min="0" max="100" step="1" value="0" />
           </label>
         </div>
         <p id="status" class="status" role="status">No image selected.</p>

@@ -10,6 +10,7 @@ const results = document.getElementById("results");
 const downloadPeopleButton = document.getElementById("download-people");
 const peopleRange = document.getElementById("people-range");
 const peopleValue = document.getElementById("people-value");
+const peopleRecommendation = document.getElementById("people-recommendation");
 const appDescription = document.getElementById("app-description");
 const dismissDescription = document.getElementById("dismiss-description");
 const limitHint = document.getElementById("limit-hint");
@@ -24,6 +25,14 @@ const rawLimit = import.meta.env.VITE_LIMIT ?? import.meta.env.LIMIT;
 const parsedLimit = Number.parseInt(rawLimit, 10);
 const MAX_FILES =
   Number.isFinite(parsedLimit) && parsedLimit > 0 ? parsedLimit : 5;
+const rawRecommendedThreshold =
+  import.meta.env.VITE_RECOMMENDED_THRESHOLD ??
+  import.meta.env.RECOMMENDED_THRESHOLD ??
+  "68";
+const parsedRecommendedThreshold = Number.parseInt(rawRecommendedThreshold, 10);
+const RECOMMENDED_THRESHOLD = Number.isFinite(parsedRecommendedThreshold)
+  ? Math.min(Math.max(parsedRecommendedThreshold, 0), 100)
+  : 68;
 const PEOPLE_LABEL = "people";
 
 const renderMessage = (message) => {
@@ -108,6 +117,19 @@ const updateThresholdLabels = () => {
   peopleValue.textContent = `${peopleRange.value}%`;
 };
 
+const updateRecommendedTooltip = () => {
+  if (!peopleRecommendation) {
+    return;
+  }
+  const label = `Recommended: ${RECOMMENDED_THRESHOLD}% based on model performance.`;
+  peopleRecommendation.setAttribute("aria-label", label);
+  peopleRecommendation.dataset.tooltip = label;
+};
+
+if (peopleRange) {
+  peopleRange.value = String(RECOMMENDED_THRESHOLD);
+}
+updateRecommendedTooltip();
 updateThresholdLabels();
 pingHealth();
 
