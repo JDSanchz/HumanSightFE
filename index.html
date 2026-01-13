@@ -16,7 +16,7 @@
             ×
           </button>
           <p>
-            Upload your images and preview them locally. For analysis, images are resized and compressed (max 200 KB) to protect the server, while your originals stay in memory for ZIP downloads.
+            HumanSight lets you quickly check whether a person is present in your photos. Upload images to preview them locally, then run the analysis; files are resized and compressed (max 200 KB) to protect the server, while originals stay in memory for ZIP downloads.
           </p>
         </div>
         <label class="upload-area" for="file-input">
@@ -41,13 +41,28 @@
         </div>
         <p id="status" class="status" role="status">No image selected.</p>
         <p id="health" class="status health" role="status">API: checking...</p>
+        <div id="progress" class="progress" hidden>
+          <div class="progress-label">
+            <span id="progress-text">Analyzing images...</span>
+            <span id="progress-count">0/0</span>
+          </div>
+          <div class="progress-track">
+            <div
+              id="progress-bar"
+              class="progress-bar"
+              role="progressbar"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            ></div>
+          </div>
+        </div>
         <div class="actions">
           <button id="download-people" type="button" disabled>
             Download ZIP (people threshold)
           </button>
         </div>
         <div id="preview" class="preview"></div>
-        <div id="results" class="results"></div>
       </section>
     </main>
     <div id="dev-flag" class="dev-flag" hidden>Dev Mode</div>
